@@ -17,9 +17,9 @@ def create_ken_burns_video(pil_image, duration=3):
         # Resize gambar
         resized = pil_image.resize((new_w, new_h), Image.Resampling.LANCZOS)
         
-        # Crop kembali ke ukuran tengah (1080x1920)
-        left = (new_w - w) / 2
-        top = (new_h - h) / 2
+        # Crop kembali ke ukuran tengah persis (WAJIB Integer)
+        left = int((new_w - w) / 2)
+        top = int((new_h - h) / 2)
         cropped = resized.crop((left, top, left + w, top + h))
         
         return np.array(cropped)
@@ -27,10 +27,10 @@ def create_ken_burns_video(pil_image, duration=3):
     # Buat klip video
     clip = VideoClip(make_frame, duration=duration)
     
-    # Simpan ke temporary file (agar aman di Streamlit Cloud)
+    # Simpan ke temporary file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
     
-    # Render (fps 24 cukup untuk Meta Ads Story)
+    # Render (fps 24 cukup)
     clip.write_videofile(temp_file.name, fps=24, codec="libx264", audio=False, logger=None)
     
     return temp_file.name
